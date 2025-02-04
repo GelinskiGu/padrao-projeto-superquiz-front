@@ -702,7 +702,7 @@ export default function TeacherPage() {
                             <TableHeader>
                               <TableRow>
                                 <TableHead className="w-[400px]">Palavra</TableHead>
-                                <TableHead className="w-[250px]">Tentativas</TableHead>
+                                <TableHead className="w-[250px]">Erros</TableHead>
                                 <TableHead>Tempo</TableHead>
                               </TableRow>
                             </TableHeader>
