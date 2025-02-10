@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { api } from '@/config/variables'
-import { useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import { deleteCookie, getCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
 import {
@@ -286,7 +286,7 @@ export default function TeacherPage() {
   }
 
   useEffect(() => console.log(selectedColor), [selectedColor])
-
+  /* eslint-disable */
   return (
     <>
       <Button size="lg" onClick={handleClick} className="absolute top-2 left-4">
@@ -397,38 +397,39 @@ export default function TeacherPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="mt-auto flex-1 flex gap-4 justify-end">
-                    <Label className="my-auto ml-auto">Escolher cor customizada:</Label>
-                    <ColorPicker value={customColor} onChange={c => setCustomColor(c)} />
-                    <Button type="button" onClick={_ => handleSubmitColor()}>Salvar</Button>
+                  <div className='mt-auto flex-1 flex gap-4 justify-end'>
+                    <Label className='my-auto ml-auto'>Escolher cor customizada:</Label>
+                    <ColorPicker value={customColor} onChange={c => setCustomColor(c)}/>
+                    <Button type='button' onClick={e => handleSubmitColor()}>Salvar</Button>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Label htmlFor="description">Explicação</Label>
-                    <Input type="description" required id="description" name="description" />
-                  </div>
-                  <div className={`${message.err ? 'text-red-700' : 'text-green-900'} font-bold`}>
-                    {message.message}
-                  </div>
-                  <DialogFooter>
-                    <Button size="lg">Criar</Button>
-                    <DialogClose
-                      className={buttonVariants({
-                        size: 'lg',
-                        variant: 'destructive',
-                        className: 'text-base font-medium',
-                      })}
-                    >
-                      Voltar
-                    </DialogClose>
-                  </DialogFooter>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="description">Explicação</Label>
+                  <Input type="description" required id="description" name="description" />
+                </div>
+                <div className={`${message.err ? 'text-red-700' : 'text-green-900'} font-bold`}>
+                  {message.message}
+                </div>
+                <DialogFooter>
+                  <Button size="lg">Criar</Button>
+                  <DialogClose
+                    className={buttonVariants({
+                      size: 'lg',
+                      variant: 'destructive',
+                      className: 'text-base font-medium',
+                    })}
+                  >
+                  Voltar
+                  </DialogClose>
+                </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
           <Dialog onOpenChange={(e) => setClosdePhaseTwo(!e)} open={!closedPhaseTwo}>
             <DialogTrigger
-              className={buttonVariants({ className: 'w-full' })}
+              className={buttonVariants({className: 'w-full'})}
             >
-              Criar exercício Fase II
+            Criar exercício Fase II
             </DialogTrigger>
             <DialogContent className="gap-6 p-8 w-[48rem]">
               <DialogHeader>
@@ -730,7 +731,7 @@ export default function TeacherPage() {
                             <TableHeader>
                               <TableRow>
                                 <TableHead className="w-[400px]">Palavra</TableHead>
-                                <TableHead className="w-[250px]">Erros</TableHead>
+                                <TableHead className="w-[250px]">Tentativas</TableHead>
                                 <TableHead>Tempo</TableHead>
                               </TableRow>
                             </TableHeader>
