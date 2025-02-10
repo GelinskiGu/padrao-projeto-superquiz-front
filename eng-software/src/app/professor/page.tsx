@@ -35,6 +35,7 @@ import {
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { TagsInput } from '@/components/ui/tags-input'
+import { ColorPicker } from '@/components/ui/color-picker'
 
 export default function TeacherPage() {
   const router = useRouter()
@@ -47,11 +48,13 @@ export default function TeacherPage() {
   const [studentInputs, setStudentInputs] = useState({ name: '', post: false, oldName: '' } as any)
   const [message, setMessage] = useState({ err: false, message: '' })
   const [colors, setColors] = useState([] as any[])
+  const [customColor, setCustomColor] = useState('#0f0f0f')
   const [themes, setThemes] = useState([] as any[])
   const [statements, setStatements] = useState([] as any[])
   const [answers, setAnswers] = useState([] as any[])
   const [words, setWords] = useState([] as any[])
   const [selectedTheme, setSelectedTheme] = useState('')
+  const [selectedColor, setSelectedColor] = useState('')
   const [closedPhaseTwo, setClosdePhaseTwo] = useState(true)
 
   useEffect(() => {
@@ -265,6 +268,25 @@ export default function TeacherPage() {
     setTimeout(() => window.location.reload(), 1000)
   }
 
+  async function handleSubmitColor() {
+    await fetch(`${api}/phases/colors`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ hex: customColor }),
+    })
+
+    const newColors = await (await fetch(`${api}/phases/colors`)).json()
+
+    setColors(newColors)
+    // encontrar a cor customizada e setar o id dela
+    console.log(`${newColors.find((c) => c.hex === customColor).id}`, 'asd')
+    setSelectedColor(`${newColors.find((c) => c.hex === customColor).id}`)
+  }
+
+  useEffect(() => console.log(selectedColor), [selectedColor])
+
   return (
     <>
       <Button size="lg" onClick={handleClick} className="absolute top-2 left-4">
@@ -356,51 +378,57 @@ export default function TeacherPage() {
                   <Label htmlFor="word">Palavra</Label>
                   <Input type="word" required id="word" name="word" />
                 </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="color">Cor</Label>
-                  <Select required name="color">
-                    <SelectTrigger className="w-full ">
-                      <SelectValue placeholder="Selecione a cor" />
-                    </SelectTrigger>
-                    <SelectContent className="max-h-80">
-                      <SelectGroup>
-                        <SelectLabel>Cores</SelectLabel>
-                        {colors.map((color) => (
-                          <SelectItem key={color.id} value={color.id.toString()}>
-                            <div className="h-6 w-6" style={{ background: color.hex }}></div>
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="description">Explicação</Label>
-                  <Input type="description" required id="description" name="description" />
-                </div>
-                <div className={`${message.err ? 'text-red-700' : 'text-green-900'} font-bold`}>
-                  {message.message}
-                </div>
-                <DialogFooter>
-                  <Button size="lg">Criar</Button>
-                  <DialogClose
-                    className={buttonVariants({
-                      size: 'lg',
-                      variant: 'destructive',
-                      className: 'text-base font-medium',
-                    })}
-                  >
-                  Voltar
-                  </DialogClose>
-                </DialogFooter>
+                <div className="flex gap-2 items-baseline">
+                  <div className='className="flex flex-col gap-2 flex-1'>
+                    <Label htmlFor="color">Cor</Label>
+                    <Select required name="color" value={selectedColor}>
+                      <SelectTrigger className="w-full ">
+                        <SelectValue placeholder="Selecione a cor" />
+                      </SelectTrigger>
+                      <SelectContent className="max-h-80">
+                        <SelectGroup>
+                          <SelectLabel>Cores</SelectLabel>
+                          {colors.map((color) => (
+                            <SelectItem key={color.id} value={color.id.toString()}>
+                              <div className="h-6 w-6" style={{ background: color.hex }}></div>
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="mt-auto flex-1 flex gap-4 justify-end">
+                    <Label className="my-auto ml-auto">Escolher cor customizada:</Label>
+                    <ColorPicker value={customColor} onChange={c => setCustomColor(c)} />
+                    <Button type="button" onClick={_ => handleSubmitColor()}>Salvar</Button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="description">Explicação</Label>
+                    <Input type="description" required id="description" name="description" />
+                  </div>
+                  <div className={`${message.err ? 'text-red-700' : 'text-green-900'} font-bold`}>
+                    {message.message}
+                  </div>
+                  <DialogFooter>
+                    <Button size="lg">Criar</Button>
+                    <DialogClose
+                      className={buttonVariants({
+                        size: 'lg',
+                        variant: 'destructive',
+                        className: 'text-base font-medium',
+                      })}
+                    >
+                      Voltar
+                    </DialogClose>
+                  </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
           <Dialog onOpenChange={(e) => setClosdePhaseTwo(!e)} open={!closedPhaseTwo}>
             <DialogTrigger
-              className={buttonVariants({className: 'w-full'})}
+              className={buttonVariants({ className: 'w-full' })}
             >
-            Criar exercício Fase II
+              Criar exercício Fase II
             </DialogTrigger>
             <DialogContent className="gap-6 p-8 w-[48rem]">
               <DialogHeader>
