@@ -47,6 +47,7 @@ function Ring({ hex, id, item }: { hex: string; id: string; item: any }) {
 function speakText(text: string) {
   const utterance = new SpeechSynthesisUtterance(text)
   window.speechSynthesis.speak(utterance)
+  return utterance
 }
 
 export default function Phase1Page() {
@@ -61,10 +62,12 @@ export default function Phase1Page() {
   const [items, setItems] = useState([] as any)
   const [colors, setColors] = useState([] as any)
   const [time, setTime] = useState(0)
+  const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     if (correctAnswer.length > 0) {
-      speakText(correctAnswer)
+      const utterance = speakText(correctAnswer)
+      setUtterance(utterance)
     }
   }, [correctAnswer])
 
@@ -210,6 +213,9 @@ export default function Phase1Page() {
             <DialogFooter>
               <DialogClose
                 onClick={() => {
+                  if (utterance) {
+                    window.speechSynthesis.cancel();
+                  }
                   setCorrectAnswer('')
                   handlePhase()
                 }}
