@@ -44,6 +44,11 @@ function Ring({ hex, id, item }: { hex: string; id: string; item: any }) {
   )
 }
 
+function speakText(text: string) {
+  const utterance = new SpeechSynthesisUtterance(text)
+  window.speechSynthesis.speak(utterance)
+}
+
 export default function Phase1Page() {
   const router = useRouter()
   const [difficultyNumber, setDifficultyNumber] = useState(1)
@@ -55,6 +60,12 @@ export default function Phase1Page() {
   const [rings, setRings] = useState([] as any)
   const [items, setItems] = useState([] as any)
   const [colors, setColors] = useState([] as any)
+
+  useEffect(() => {
+    if (correctAnswer.length > 0) {
+      speakText(correctAnswer)
+    }
+  }, [correctAnswer])
 
   async function onDragEnd(e: DropResult) {
     if (!e.destination) return

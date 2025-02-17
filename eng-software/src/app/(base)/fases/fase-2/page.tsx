@@ -9,6 +9,12 @@ import { getCookie, setCookie } from 'cookies-next'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+function speakText(text: string) {
+  const utterance = new SpeechSynthesisUtterance(text)
+  utterance.rate = 0.8
+  window.speechSynthesis.speak(utterance)
+}
+
 export default function Phase2Page() {
   const router = useRouter()
   const [questions, setQuestions] = useState([] as any[])
@@ -27,6 +33,12 @@ export default function Phase2Page() {
 
     fetchQuestions()
   }, [])
+
+  useEffect(() => {
+    if (questions.length > 0 && questions[indexQuestion]) {
+      speakText(questions[indexQuestion].statements.join(' '))
+    }
+  }, [questions, indexQuestion])
 
   async function handleClick(answerId: any) {
     const studentId = getCookie('student')
