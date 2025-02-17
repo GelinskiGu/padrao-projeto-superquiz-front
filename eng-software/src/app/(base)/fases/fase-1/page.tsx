@@ -60,6 +60,7 @@ export default function Phase1Page() {
   const [rings, setRings] = useState([] as any)
   const [items, setItems] = useState([] as any)
   const [colors, setColors] = useState([] as any)
+  const [time, setTime] = useState(0)
 
   useEffect(() => {
     if (correctAnswer.length > 0) {
@@ -137,7 +138,7 @@ export default function Phase1Page() {
       body: JSON.stringify({
         phaseOneId: item.phaseOneId,
         idColor: colors.find((c) => c.hex === color).id,
-        seconds,
+        seconds: seconds - time,
       }),
     })
   }
@@ -262,6 +263,7 @@ export default function Phase1Page() {
                   <Draggable draggableId={item.id} index={index}>
                     {(provided) => (
                       <div
+                        onMouseDown={() =>  setTime(seconds)}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         ref={provided.innerRef}
